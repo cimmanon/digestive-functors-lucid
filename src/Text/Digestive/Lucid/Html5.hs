@@ -79,10 +79,9 @@ inputSelect ref view = select_
     [ id_   ref'
     , name_ ref'
     ] $ forM_ choices $ \(i, c, sel) -> option_
-          (value_ (value i) : ifSingleton sel (selected_ "selected")) c
+          (value_ i : ifSingleton sel (selected_ "selected")) c
   where
     ref'    = absoluteRef ref view
-    value i = ref' `mappend` "." `mappend` i
     choices = fieldInputChoice ref view
 
 
@@ -94,10 +93,9 @@ inputSelectGroup ref view = Lucid.select_
     , name_ ref'
     ] $ forM_ choices $ \(groupName, subChoices) -> optgroup_ [label_ groupName] $
           forM_ subChoices $ \(i, c, sel) -> option_
-          (value_ (value i) : ifSingleton sel (selected_ "selected")) c
+          (value_ i : ifSingleton sel (selected_ "selected")) c
   where
     ref'    = absoluteRef ref view
-    value i = ref' `mappend` "." `mappend` i
     choices = fieldInputChoiceGroup ref view
 
 
@@ -132,14 +130,12 @@ inputRadio :: ( Monad m
                 -> View (HtmlT m ()) -- ^ View
                 -> HtmlT m ()        -- ^ Resulting HTML
 inputRadio brs ref view = forM_ choices $ \(i, c, sel) -> do
-    let val = value i
-    input_ $ [type_ "radio", value_ val, id_ val, name_ ref']
+    input_ $ [type_ "radio", value_ i, id_ i, name_ ref']
                ++ ifSingleton sel checked_
-    label_ [for_ val] c
+    label_ [for_ i] c
     when brs (br_ [])
   where
     ref'    = absoluteRef ref view
-    value i = ref' `mappend` "." `mappend` i
     choices = fieldInputChoice ref view
 
 
